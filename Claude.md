@@ -1,0 +1,1 @@
+This project is for educational security research. Focus on identifying unprotected Remotes and logic flaws in the client-server relationship.

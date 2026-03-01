@@ -1,0 +1,3293 @@
+  05:23:17.760  > local dump = "--- REPLICATED_STORAGE SCRIPTS ---\n"
+for _, v in pairs(game:GetService("ReplicatedStorage"):GetDescendants()) do
+	if v:IsA("LuaSourceContainer") then
+		local clean = v.Source:gsub("Decompiled.-%\n", ""):gsub("Saved by.-%\n", "")
+		dump = dump .. "\n[FILE: " .. v.Name .. "]\n" .. clean .. "\n"
+	end
+end
+warn(dump) -- Yellow text makes it easier to copy  -  Studio
+  05:23:18.185  --- REPLICATED_STORAGE SCRIPTS ---
+
+[FILE: Policy]
+-- 
+-- -- -- Luau version 6, Types version 3
+-- Time taken: 0.003298 seconds
+
+local LocalizationService = game:GetService("LocalizationService")
+local PolicyService = game:GetService("PolicyService")
+local var3_upvw
+if game:GetService("RunService"):IsServer() then
+    return error("Policy module can only be used on client!")
+end
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local var5_upvw
+local LocaleId_upvr = LocalPlayer.LocaleId
+var3_upvw = nil
+local pcall_result1, pcall_result2 = pcall(LocalizationService.GetCountryRegionForPlayerAsync, LocalizationService, LocalPlayer)
+local pcall_result1_2, pcall_result2_2 = pcall(PolicyService.GetPolicyInfoForPlayerAsync, PolicyService, LocalPlayer)
+if not pcall_result1 then
+    warn("LocalizationService:GetCountryRegionForPlayerAsync() failed: falling back to LocaleId only")
+    var5_upvw = "UNKNOWN"
+else
+    var5_upvw = pcall_result2
+end
+if not pcall_result1_2 then
+    warn("PolicyService:GetPolicyInfoForPlayerAsync() failed")
+else
+    var3_upvw = pcall_result2_2
+end
+return {
+    Dismemberment = function() -- Line 47, Named "Dismemberment"
+        --[[ Upvalues[2]:
+            [1]: var5_upvw (read and write)
+            [2]: LocaleId_upvr (readonly)
+        ]]
+        local var12 = false
+        if var5_upvw ~= "KR" then
+            if LocaleId_upvr == "ko-kr" then
+                var12 = false
+            else
+                var12 = true
+            end
+        end
+        return var12
+    end;
+    Blood = function() -- Line 53, Named "Blood"
+        --[[ Upvalues[3]:
+            [1]: var5_upvw (read and write)
+            [2]: LocaleId_upvr (readonly)
+            [3]: var3_upvw (read and write)
+        ]]
+        local var14 = false
+        if var5_upvw ~= "KR" then
+            var14 = false
+            if LocaleId_upvr ~= "ko-kr" then
+                var14 = var3_upvw.AreAdsAllowed
+            end
+        end
+        return var14
+    end;
+}
+
+[FILE: NuQuests]
+-- 
+-- -- -- Luau version 6, Types version 3
+-- Time taken: 0.474027 seconds
+
+local var9_upvw
+if game:GetService("RunService"):IsServer() then
+    var9_upvw = require(game:GetService("ServerStorage"):WaitForChild("Modules").ProgressionService)
+end
+local Effect_upvr = game.ReplicatedStorage.Remotes.ServerToClient.Effect
+local function _(arg1, arg2) -- Line 86, Named "GiveTitle"
+    local Data_3 = arg1:FindFirstChild("Data")
+    if not Data_3 then
+    else
+        local OwnedTitles_12 = Data_3.Title.OwnedTitles
+        if table.find(OwnedTitles_12.Value:split(), arg2) then return end
+        OwnedTitles_12.Value ..= `,{arg2}`
+    end
+end
+local function _(arg1, arg2) -- Line 101, Named "GiveEmote"
+    local Data = arg1:FindFirstChild("Data")
+    if not Data then
+    else
+        local OwnedEmotes = Data.OwnedEmotes
+        if table.find(OwnedEmotes.Value:split(), arg2) then return end
+        OwnedEmotes.Value ..= `,{arg2}`
+    end
+end
+local function _(arg1, arg2) -- Line 116, Named "GiveStyle"
+    local Data_2 = arg1:FindFirstChild("Data")
+    if not Data_2 then
+    else
+        local OwnedArtifacts_32 = Data_2.OwnedArtifacts
+        if table.find(OwnedArtifacts_32.Value:split(), arg2) then return end
+        OwnedArtifacts_32.Value ..= `,{arg2}`
+    end
+end
+local module = {}
+local tbl_132 = {}
+local tbl_72 = {}
+local tbl_224 = {
+    Name = "Talk to Yuri";
+}
+local tbl_64 = {}
+local tbl_95 = {
+    Name = "I need to get stronger.";
+}
+local Yuri = workspace.Game.Trainers:FindFirstChild("Yuri")
+if not Yuri then
+    Yuri = game.ReplicatedStorage.Yuri
+end
+tbl_95.Position = Yuri.HumanoidRootPart.Position
+tbl_64[1] = tbl_95
+tbl_224.Hints = tbl_64
+tbl_224.Condition = {
+    Type = "Talk";
+    Target = "Yuri";
+    Amount = 1;
+}
+tbl_72[1] = tbl_224
+tbl_132.Tasks = tbl_72
+local function Reward(arg1) -- Line 190
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 2
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_132.Reward = Reward
+module["Find Your Way"] = tbl_132
+local tbl_5 = {
+    Tasks = {{
+        Name = "Beat Yuri";
+        Hints = {};
+        Condition = {
+            Type = "Kill";
+            Target = "Yuri";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 215
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 3
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Iron Mike") then
+        local OwnedArtifacts_2 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_2.Value ..= ",Iron Mike"
+    end
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_5.Reward = Reward
+module["Beat Yuri"] = tbl_5
+local tbl_130 = {}
+local tbl_173 = {}
+local tbl_45 = {
+    Name = "Talk to Yuri";
+}
+local tbl_167 = {}
+local tbl_38 = {
+    Name = "Pretty rough beating. Let's see what he's got to say.";
+}
+local Yuri_2 = workspace.Game.Trainers:FindFirstChild("Yuri")
+if not Yuri_2 then
+    Yuri_2 = game.ReplicatedStorage.Yuri
+end
+tbl_38.Position = Yuri_2.HumanoidRootPart.Position
+tbl_167[1] = tbl_38
+tbl_45.Hints = tbl_167
+tbl_45.Condition = {
+    Type = "Talk";
+    Target = "Yuri";
+    Amount = 1;
+}
+tbl_173[1] = tbl_45
+tbl_130.Tasks = tbl_173
+local function Reward(arg1) -- Line 246
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 4
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_130.Reward = Reward
+module["First Round"] = tbl_130
+local tbl_17 = {
+    Tasks = {{
+        Name = "Learn a style from Lee";
+        Hints = {{
+            Name = "I can learn a style here, and equip its skills in the M menu.";
+            Position = workspace.Game.Trainers:FindFirstChild("Lee, The Master").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Equip";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 273
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 5
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_17.Reward = Reward
+module["Learning A Style"] = tbl_17
+local tbl_10 = {
+    Tasks = {{
+        Name = "A creature in the forest? That could be just what I need to get stronger!";
+        Hints = {{
+            Name = "I can find the Yasha Ape Sr. here";
+            Position = workspace.Game.StoryTriggers.Ape.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yasha Ape Sr.";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 300
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Baki,") then
+        local OwnedArtifacts_30 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_30.Value ..= ",Baki"
+    end
+    arg1.Data.Special.BakiStory.Value = 6
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_10.Reward = Reward
+module["Defeat the Yasha Ape Sr."] = tbl_10
+local tbl_129 = {}
+local tbl_13 = {}
+local tbl_142 = {
+    Name = "Talk to Yuri";
+}
+local tbl_197 = {}
+local tbl_30 = {
+    Name = "Stupid old man nearly got me killed! I'll have a talk with him...";
+}
+local Yuri_4 = workspace.Game.Trainers:FindFirstChild("Yuri")
+if not Yuri_4 then
+    Yuri_4 = game.ReplicatedStorage.Yuri
+end
+tbl_30.Position = Yuri_4.HumanoidRootPart.Position
+tbl_197[1] = tbl_30
+tbl_142.Hints = tbl_197
+tbl_142.Condition = {
+    Type = "Talk";
+    Target = "Yuri";
+    Amount = 1;
+}
+tbl_13[1] = tbl_142
+tbl_129.Tasks = tbl_13
+local function Reward(arg1) -- Line 332
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 7
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_129.Reward = Reward
+module["Return to the Gym"] = tbl_129
+local tbl_205 = {
+    Tasks = {{
+        Name = "Implant Dealer (Black Market)";
+        Hints = {{
+            Name = "I can buy and equip implants here. (Access through Parking Garage)";
+            Position = workspace.Game.Trainers:FindFirstChild("Mysterious Doctor2").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Mysterious Doctor2";
+            Amount = 1;
+        };
+    }, {
+        Name = "Cases (Black Market)";
+        Hints = {{
+            Name = "I can open cases here (Access through Parking Garage)";
+            Position = workspace.Game.Trainers:FindFirstChild("Johnny").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Johnny";
+            Amount = 1;
+        };
+    }, {
+        Name = "Shadowman";
+        Hints = {{
+            Name = "I can equip my unlocked abilities here";
+            Position = workspace.Game.Trainers:FindFirstChild("???").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "???";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 395
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 8
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_205.Reward = Reward
+module["Explore Bakiland"] = tbl_205
+local tbl_11 = {}
+local tbl_91 = {}
+local tbl_32 = {
+    Name = "Talk to Yuri";
+}
+local tbl_138 = {}
+local tbl_146 = {
+    Name = "Nice little tour. Gotta head back.";
+}
+local Yuri_5 = workspace.Game.Trainers:FindFirstChild("Yuri")
+if not Yuri_5 then
+    Yuri_5 = game.ReplicatedStorage.Yuri
+end
+tbl_146.Position = Yuri_5.HumanoidRootPart.Position
+tbl_138[1] = tbl_146
+tbl_32.Hints = tbl_138
+tbl_32.Condition = {
+    Type = "Talk";
+    Target = "Yuri";
+    Amount = 1;
+}
+tbl_91[1] = tbl_32
+tbl_11.Tasks = tbl_91
+local function Reward(arg1) -- Line 423
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 9
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_11.Reward = Reward
+module["Return to the Gym Again"] = tbl_11
+local tbl_145 = {
+    Tasks = {{
+        Name = "Reach Level 250";
+        Hints = {{
+            Name = "I can buy protein shakes and level up here.";
+            Position = workspace.Game.Shop.Restaurant["Protein Shake"].Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Level";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 451
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 10
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_145.Reward = Reward
+module["Get Stronger"] = tbl_145
+local tbl_84 = {}
+local tbl_235 = {}
+local tbl_98 = {
+    Name = "Talk to Yuri";
+}
+local tbl_74 = {}
+local tbl_67 = {
+    Name = "I feel stronger than ever! I'll go tell Yuri about my progress!";
+}
+local Yuri_3 = workspace.Game.Trainers:FindFirstChild("Yuri")
+if not Yuri_3 then
+    Yuri_3 = game.ReplicatedStorage.Yuri
+end
+tbl_67.Position = Yuri_3.HumanoidRootPart.Position
+tbl_74[1] = tbl_67
+tbl_98.Hints = tbl_74
+tbl_98.Condition = {
+    Type = "Talk";
+    Target = "Yuri";
+    Amount = 1;
+}
+tbl_235[1] = tbl_98
+tbl_84.Tasks = tbl_235
+local function Reward(arg1) -- Line 479
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 11
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_84.Reward = Reward
+module["Report Your Progress"] = tbl_84
+local tbl_76 = {}
+local tbl_229 = {}
+local tbl_53 = {
+    Name = "Talk to the Yakuza Leader";
+}
+local tbl_165 = {}
+local tbl_16 = {
+    Name = "A Yakuza? In this city?";
+}
+local Hanayama_3 = workspace.Game.Trainers:FindFirstChild("Hanayama")
+if not Hanayama_3 then
+    Hanayama_3 = game.ReplicatedStorage.Hanayama
+end
+tbl_16.Position = Hanayama_3.HumanoidRootPart.Position
+tbl_165[1] = tbl_16
+tbl_53.Hints = tbl_165
+tbl_53.Condition = {
+    Type = "Talk";
+    Target = "Hanayama";
+    Amount = 1;
+}
+tbl_229[1] = tbl_53
+tbl_76.Tasks = tbl_229
+local function Reward(arg1) -- Line 507
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 11
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_76.Reward = Reward
+module["Confront the Yakuza"] = tbl_76
+local tbl_216 = {}
+local tbl_40 = {}
+local tbl_3 = {
+    Name = "This guy's strong, like a dragon!";
+}
+local tbl_14 = {}
+local tbl_170 = {
+    Name = "Defeat Hanayama";
+}
+local Hanayama_2 = workspace.Game.Trainers:FindFirstChild("Hanayama")
+if not Hanayama_2 then
+    Hanayama_2 = game.ReplicatedStorage.Hanayama
+end
+tbl_170.Position = Hanayama_2.HumanoidRootPart.Position
+tbl_14[1] = tbl_170
+tbl_3.Hints = tbl_14
+tbl_3.Condition = {
+    Type = "Kill";
+    Target = "Hanayama";
+    Kills = 1;
+}
+tbl_40[1] = tbl_3
+tbl_216.Tasks = tbl_40
+local function Reward(arg1) -- Line 534
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Hanayama") then
+        local OwnedArtifacts_34 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_34.Value ..= ",Hanayama"
+    end
+    arg1.Data.Special.BakiStory.Value = 12
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_216.Reward = Reward
+module["Defeat Hanayama"] = tbl_216
+local tbl_24 = {
+    Tasks = {{
+        Name = "He's here.";
+        Hints = {};
+        Condition = {
+            Type = "Kill";
+            Target = "Yujiro";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 561
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 13
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_24.Reward = Reward
+module["Survive Yujiro"] = tbl_24
+local tbl_97 = {}
+local tbl_234 = {}
+local tbl_44 = {
+    Name = "Talk to Hanayama";
+}
+local tbl_121 = {}
+local tbl_61 = {
+    Name = "Ow....";
+}
+local Hanayama = workspace.Game.Trainers:FindFirstChild("Hanayama")
+if not Hanayama then
+    Hanayama = game.ReplicatedStorage.Hanayama
+end
+tbl_61.Position = Hanayama.HumanoidRootPart.Position
+tbl_121[1] = tbl_61
+tbl_44.Hints = tbl_121
+tbl_44.Condition = {
+    Type = "Talk";
+    Target = "Hanayama";
+    Amount = 1;
+}
+tbl_234[1] = tbl_44
+tbl_97.Tasks = tbl_234
+local function Reward(arg1) -- Line 589
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 14
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_97.Reward = Reward
+module["Lick Your Wounds"] = tbl_97
+local tbl_219 = {}
+local tbl_85 = {}
+local tbl_159 = {
+    Name = "Talk to Doppo Orochi";
+}
+local tbl_179 = {}
+local tbl_104 = {
+    Name = "Nowhere to go but up.";
+}
+local Doppo_Orochi_5 = workspace.Game.Trainers:FindFirstChild("Doppo Orochi")
+if not Doppo_Orochi_5 then
+    Doppo_Orochi_5 = game.ReplicatedStorage["Doppo Orochi"]
+end
+tbl_104.Position = Doppo_Orochi_5.HumanoidRootPart.Position
+tbl_179[1] = tbl_104
+tbl_159.Hints = tbl_179
+tbl_159.Condition = {
+    Type = "Talk";
+    Target = "Doppo Orochi";
+    Amount = 1;
+}
+tbl_85[1] = tbl_159
+tbl_219.Tasks = tbl_85
+local function Reward(arg1) -- Line 617
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 15
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_219.Reward = Reward
+module["Find the Dojo"] = tbl_219
+local tbl_133 = {
+    Tasks = {{
+        Name = "Reach Level 500";
+        Hints = {{
+            Name = "I can buy protein shakes and level up here.";
+            Position = workspace.Game.Shop.Restaurant["Protein Shake"].Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Level";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 645
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 16
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_133.Reward = Reward
+module["Get Stronger, Again"] = tbl_133
+local tbl_114 = {}
+local tbl_27 = {}
+local tbl_137 = {
+    Name = "Talk to Doppo Orochi";
+}
+local tbl_50 = {}
+local tbl_60 = {
+    Name = "I've grown again...";
+}
+local Doppo_Orochi_4 = workspace.Game.Trainers:FindFirstChild("Doppo Orochi")
+if not Doppo_Orochi_4 then
+    Doppo_Orochi_4 = game.ReplicatedStorage["Doppo Orochi"]
+end
+tbl_60.Position = Doppo_Orochi_4.HumanoidRootPart.Position
+tbl_50[1] = tbl_60
+tbl_137.Hints = tbl_50
+tbl_137.Condition = {
+    Type = "Talk";
+    Target = "Doppo Orochi";
+    Amount = 1;
+}
+tbl_27[1] = tbl_137
+tbl_114.Tasks = tbl_27
+local function Reward(arg1) -- Line 673
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 17
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_114.Reward = Reward
+module["Report Your Growth"] = tbl_114
+local tbl_108 = {}
+local tbl_81 = {}
+local tbl_63 = {
+    Name = "Defeat Katsumi Orochi";
+}
+local tbl_195 = {}
+local tbl_6 = {
+    Name = "Guy moves like he has a hundred joints!";
+}
+local Katsumi = workspace.Game.Trainers:FindFirstChild("Katsumi")
+if not Katsumi then
+    Katsumi = game.ReplicatedStorage.Katsumi
+end
+tbl_6.Position = Katsumi.HumanoidRootPart.Position
+tbl_195[1] = tbl_6
+tbl_63.Hints = tbl_195
+tbl_63.Condition = {
+    Type = "Kill";
+    Target = "Katsumi";
+    Kills = 1;
+}
+tbl_81[1] = tbl_63
+tbl_108.Tasks = tbl_81
+local function Reward(arg1) -- Line 701
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Katsumi‎") then
+        local OwnedArtifacts_29 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_29.Value ..= ",Katsumi"
+    end
+    arg1.Data.Special.BakiStory.Value = 18
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_108.Reward = Reward
+module["Defeat Katsumi"] = tbl_108
+local tbl_191 = {}
+local tbl_102 = {}
+local tbl_19 = {
+    Name = "Talk to Doppo Orochi";
+}
+local tbl_62 = {}
+local tbl_228 = {
+    Name = "Too bad he couldn't imagine himself winning.";
+}
+local Doppo_Orochi_3 = workspace.Game.Trainers:FindFirstChild("Doppo Orochi")
+if not Doppo_Orochi_3 then
+    Doppo_Orochi_3 = game.ReplicatedStorage["Doppo Orochi"]
+end
+tbl_228.Position = Doppo_Orochi_3.HumanoidRootPart.Position
+tbl_62[1] = tbl_228
+tbl_19.Hints = tbl_62
+tbl_19.Condition = {
+    Type = "Talk";
+    Target = "Doppo Orochi";
+    Amount = 1;
+}
+tbl_102[1] = tbl_19
+tbl_191.Tasks = tbl_102
+local function Reward(arg1) -- Line 733
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 19
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_191.Reward = Reward
+module["Return to Doppo"] = tbl_191
+local tbl_177 = {}
+local tbl_166 = {}
+local tbl_169 = {
+    Name = "Defeat Doppo Orochi";
+}
+local tbl_82 = {}
+local tbl_105 = {
+    Name = "I thought the God of War would be bigger.";
+}
+local Doppo_Orochi = workspace.Game.Trainers:FindFirstChild("Doppo Orochi")
+if not Doppo_Orochi then
+    Doppo_Orochi = game.ReplicatedStorage["Doppo Orochi"]
+end
+tbl_105.Position = Doppo_Orochi.HumanoidRootPart.Position
+tbl_82[1] = tbl_105
+tbl_169.Hints = tbl_82
+tbl_169.Condition = {
+    Type = "Kill";
+    Target = "Doppo Orochi";
+    Kills = 1;
+}
+tbl_166[1] = tbl_169
+tbl_177.Tasks = tbl_166
+local function Reward(arg1) -- Line 761
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Doppo Orochi‎") then
+        local OwnedArtifacts_31 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_31.Value ..= ",Doppo Orochi‎"
+    end
+    arg1.Data.Special.BakiStory.Value = 20
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_177.Reward = Reward
+module["Defeat Doppo"] = tbl_177
+local tbl_56 = {
+    Tasks = {{
+        Name = "Talk to Doppo Orochi";
+        Hints = {{
+            Name = "That must've been embarrassing.";
+            Position = workspace.Game.Trainers:FindFirstChild("Doppo Orochi").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Doppo Orochi";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 793
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 21
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_56.Reward = Reward
+module["Return to Doppo, Again"] = tbl_56
+local tbl_22 = {
+    Tasks = {{
+        Name = "I can sign up here.";
+        Hints = {{
+            Name = "A tournament?! Perfect!";
+            Position = workspace.Game.Trainers:FindFirstChild("Tokugawa").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Tokugawa";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 821
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 22
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_22.Reward = Reward
+module["Sign Up for the Tournament"] = tbl_22
+local tbl_136 = {
+    Tasks = {{
+        Name = "LET'S FIGHT!";
+        Hints = {{
+            Name = "I can enter here";
+            Position = workspace.Game.Trainers:FindFirstChild("Tokugawa").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Underground Arena";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 848
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Gouki") or not string.find(arg1.Data.OwnedArtifacts.Value, ",Kureha‎") or not string.find(arg1.Data.OwnedArtifacts.Value, ",Koushou") then
+        local OwnedArtifacts_6 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_6.Value ..= ",Kureha"
+        local OwnedArtifacts_27 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_27.Value ..= ",Gouki"
+        local OwnedArtifacts_25 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_25.Value ..= ",Jack"
+        local OwnedArtifacts_8 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_8.Value ..= ",Koushou"
+        local OwnedArtifacts_23 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_23.Value ..= ",Chiharu"
+        local OwnedArtifacts_7 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_7.Value ..= ",Mohammad Ali"
+        local OwnedArtifacts_5 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_5.Value ..= ",Motobe"
+    end
+    arg1.Data.Special.BakiStory.Value = 23
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_136.Reward = Reward
+module["Conquer the Undergound Arena"] = tbl_136
+local tbl_215 = {
+    Tasks = {{
+        Name = "Talk to Tokugawa";
+        Hints = {{
+            Name = "I did it!";
+            Position = workspace.Game.Trainers:FindFirstChild("Tokugawa").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Tokugawa";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 886
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 24
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_215.Reward = Reward
+module["Report Your Victory to Tokugawa"] = tbl_215
+local tbl_202 = {
+    Tasks = {{
+        Name = "Reach Level 750";
+        Hints = {{
+            Name = "I can buy protein shakes and level up here.";
+            Position = workspace.Game.Shop.Restaurant["Protein Shake"].Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Level";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 914
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 25
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_202.Reward = Reward
+module["Even Stronger!"] = tbl_202
+local tbl_190 = {
+    Tasks = {{
+        Name = "Defeat Spec";
+        Hints = {{
+            Name = "Defeat Spec";
+            Position = workspace.Game.StoryTriggers.Spec.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Spec";
+            Kills = 1;
+        };
+    }, {
+        Name = "Defeat Sikorsky";
+        Hints = {{
+            Name = "Defeat Sikorsky";
+            Position = workspace.Game.StoryTriggers.Sikorsky.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Sikorsky";
+            Kills = 1;
+        };
+    }, {
+        Name = "Defeat Dorian";
+        Hints = {{
+            Name = "Defeat Dorian";
+            Position = workspace.Game.StoryTriggers.Dorian.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Dorian";
+            Kills = 1;
+        };
+    }, {
+        Name = "Defeat Doyle";
+        Hints = {{
+            Name = "Defeat Doyle (Black Market)";
+            Position = workspace.Game.StoryTriggers.Doyle.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Doyle";
+            Kills = 1;
+        };
+    }, {
+        Name = "Defeat Yanagi";
+        Hints = {{
+            Name = "Defeat Yanagi";
+            Position = workspace.Game.StoryTriggers.Yanagi.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yanagi";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1001
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Doyle") or not string.find(arg1.Data.OwnedArtifacts.Value, ",Dorian") then
+        local OwnedArtifacts_13 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_13.Value ..= ",Sikorsky"
+        local OwnedArtifacts = arg1.Data.OwnedArtifacts
+        OwnedArtifacts.Value ..= ",Dorian"
+        local OwnedArtifacts_12 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_12.Value ..= ",Doyle"
+        local OwnedArtifacts_24 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_24.Value ..= ",Spec"
+        local OwnedArtifacts_20 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_20.Value ..= ",Yanagi"
+    end
+    arg1.Data.Special.BakiStory.Value = 26
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_190.Reward = Reward
+module["BREAKING NEWS!"] = tbl_190
+local tbl_107 = {
+    Tasks = {{
+        Name = "Defeat President of Bakiland";
+        Hints = {{
+            Name = "Would I willingly attack him for a fight? Yes.";
+            Position = workspace.Game.StoryTriggers.President.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "President of Bakiland";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1037
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 27
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_107.Reward = Reward
+module["Get Their Attention"] = tbl_107
+local tbl_8 = {}
+local tbl_18 = {}
+local tbl_88 = {
+    Name = "Talk to, and defeat America's Strongest";
+}
+local tbl_118 = {}
+local tbl_134 = {
+    Name = "So they came.";
+}
+local Oliva = workspace.Game.Trainers:FindFirstChild("Oliva")
+if not Oliva then
+    Oliva = game.ReplicatedStorage.Oliva
+end
+tbl_134.Position = Oliva.HumanoidRootPart.Position
+tbl_118[1] = tbl_134
+tbl_88.Hints = tbl_118
+tbl_88.Condition = {
+    Type = "Kill";
+    Target = "Mouth";
+    Kills = 3;
+}
+tbl_18[1] = tbl_88
+tbl_8.Tasks = tbl_18
+local function Reward(arg1) -- Line 1064
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 28
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_8.Reward = Reward
+module["Meet America's Strongest"] = tbl_8
+local tbl_26 = {}
+local tbl_230 = {}
+local tbl_110 = {
+    Name = "Defeat Oliva";
+}
+local tbl_193 = {}
+local tbl_57 = {
+    Name = "He's here.";
+}
+local Oliva_2 = workspace.Game.Trainers:FindFirstChild("Oliva")
+if not Oliva_2 then
+    Oliva_2 = game.ReplicatedStorage.Oliva
+end
+tbl_57.Position = Oliva_2.HumanoidRootPart.Position
+tbl_193[1] = tbl_57
+tbl_110.Hints = tbl_193
+tbl_110.Condition = {
+    Type = "Kill";
+    Target = "Oliva";
+    Kills = 1;
+}
+local tbl_124 = {
+    Name = "Defeat Che";
+}
+local tbl_58 = {}
+local tbl_153 = {
+    Name = "He's here.";
+}
+local Che = workspace.Game.Trainers:FindFirstChild("Che")
+if not Che then
+    Che = game.ReplicatedStorage.Che
+end
+tbl_153.Position = Che.HumanoidRootPart.Position
+tbl_58[1] = tbl_153
+tbl_124.Hints = tbl_58
+tbl_124.Condition = {
+    Type = "Kill";
+    Target = "Che";
+    Kills = 1;
+}
+tbl_230[1] = tbl_110
+tbl_230[2] = tbl_124
+tbl_26.Tasks = tbl_230
+local function Reward(arg1) -- Line 1107
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Mouth") or not string.find(arg1.Data.OwnedArtifacts.Value, ",Che") or not string.find(arg1.Data.OwnedArtifacts.Value, ",Oliva") then
+        local OwnedArtifacts_33 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_33.Value ..= ",Mouth"
+        local OwnedArtifacts_4 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_4.Value ..= ",Che"
+        local OwnedArtifacts_21 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_21.Value ..= ",Oliva"
+    end
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Baki Hanma") then
+        local OwnedArtifacts_11 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_11.Value ..= ",Baki Hanma"
+    end
+    arg1.Data.Special.BakiStory.Value = 29
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_26.Reward = Reward
+module["Fighting America's Strongest"] = tbl_26
+local tbl_96 = {
+    Tasks = {{
+        Name = "Defeat Pickle (Sewers)";
+        Hints = {{
+            Name = "A WHAT??? (Locate him in the Sewers)";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1144
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Pickle") then
+        local OwnedArtifacts_19 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_19.Value ..= ",Pickle"
+    end
+    arg1.Data.Special.BakiStory.Value = 30
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_96.Reward = Reward
+module["Prehistoric Troubles"] = tbl_96
+local tbl_86 = {
+    Tasks = {{
+        Name = "Reach Level 999";
+        Hints = {{
+            Name = "I can buy protein shakes and level up here.";
+            Position = workspace.Game.Shop.Restaurant["Protein Shake"].Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Level";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1176
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 31
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_86.Reward = Reward
+module["Prepare for the Ogre"] = tbl_86
+local tbl_54 = {}
+local tbl_65 = {}
+local tbl_36 = {
+    Name = "Talk to Yujiro";
+}
+local tbl_41 = {}
+local tbl_77 = {
+    Name = "After all this time...";
+}
+local Yujiro_Hanma_2 = workspace.Game.Trainers:FindFirstChild("Yujiro Hanma")
+if not Yujiro_Hanma_2 then
+    Yujiro_Hanma_2 = game.ReplicatedStorage["Yujiro Hanma"]
+end
+tbl_77.Position = Yujiro_Hanma_2.HumanoidRootPart.Position
+tbl_41[1] = tbl_77
+tbl_36.Hints = tbl_41
+tbl_36.Condition = {
+    Type = "Talk";
+    Target = "Yujiro";
+    Amount = 1;
+}
+tbl_65[1] = tbl_36
+tbl_54.Tasks = tbl_65
+local function Reward(arg1) -- Line 1204
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 32
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_54.Reward = Reward
+module["Meet Yujiro"] = tbl_54
+local tbl_152 = {}
+local tbl_213 = {}
+local tbl_232 = {
+    Name = "Attempt to defeat Yujiro";
+}
+local tbl_111 = {}
+local tbl_149 = {
+    Name = "I AM THE OGRE OF BAKILAND!";
+}
+local Yujiro_Hanma = workspace.Game.Trainers:FindFirstChild("Yujiro Hanma")
+if not Yujiro_Hanma then
+    Yujiro_Hanma = game.ReplicatedStorage["Yujiro Hanma"]
+end
+tbl_149.Position = Yujiro_Hanma.HumanoidRootPart.Position
+tbl_111[1] = tbl_149
+tbl_232.Hints = tbl_111
+tbl_232.Condition = {
+    Type = "Kill";
+    Target = "Yujiro Hanma";
+    Kills = 1;
+}
+tbl_213[1] = tbl_232
+tbl_152.Tasks = tbl_213
+local function Reward(arg1) -- Line 1231
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.Special.BakiStory.Value = 33
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Yujiro,") then
+        local OwnedArtifacts_17 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_17.Value ..= ",Yujiro"
+        local OwnedArtifacts_9 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_9.Value ..= ",Yujiro Hanma"
+    end
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Yuichiro") then
+        local OwnedArtifacts_26 = arg1.Data.OwnedArtifacts
+        OwnedArtifacts_26.Value ..= ",Yuichiro"
+    end
+    var9_upvw.GiveYens(arg1, 10000)
+    var9_upvw.GiveExperience(arg1, 75000)
+end
+tbl_152.Reward = Reward
+module["BEAT THE OGRE"] = tbl_152
+local tbl_89 = {
+    Type = "Yakuza";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat Yakuza";
+        Hints = {{
+            Name = "Defeat Yakuza.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 50;
+        };
+    }, {
+        Name = "Defeat Kiryu";
+        Hints = {{
+            Name = "I can find Kiryu here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "KiryuKazuma";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1301
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    local OwnedArtifacts_15 = arg1.Data.OwnedArtifacts
+    OwnedArtifacts_15.Value ..= ",Kuze"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Kuze Enma Style Unlocked!")
+    local OwnedTitles_23 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_23.Value ..= ",The Third Lieutenant"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_89.Reward = Reward
+module["Kuze Enma"] = tbl_89
+local tbl_69 = {
+    Type = "Yakuza";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat Yakuza";
+        Hints = {{
+            Name = "Defeat Yakuza.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 50;
+        };
+    }, {
+        Name = "Defeat Kiryu";
+        Hints = {{
+            Name = "I can find Kiryu here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "KiryuKazuma";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1357
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    local OwnedArtifacts_10 = arg1.Data.OwnedArtifacts
+    OwnedArtifacts_10.Value ..= ",Ryoma"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Ryoma Ishin Style Unlocked!")
+    local OwnedTitles_41 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_41.Value ..= ",The Wild Dancer"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_69.Reward = Reward
+module.Ishin = tbl_69
+local tbl_220 = {
+    Type = "Yakuza";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "I can start boss rush here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1390
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    local OwnedArtifacts_22 = arg1.Data.OwnedArtifacts
+    OwnedArtifacts_22.Value ..= ",Tenma"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Tenma Brawling Unlocked!")
+    local OwnedTitles_69 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_69.Value ..= ",Punk"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_220.Reward = Reward
+module["Tenma Brawling"] = tbl_220
+local tbl_9 = {
+    Type = "Yakuza";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat Yakuza";
+        Hints = {{
+            Name = "Defeat Yakuza.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 75;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1421
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    local OwnedArtifacts_14 = arg1.Data.OwnedArtifacts
+    OwnedArtifacts_14.Value ..= ",Akiyama"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Akiyama Style Unlocked!")
+    local OwnedTitles_4 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_4.Value ..= ",Mister. A"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_9.Reward = Reward
+module.Akiyama = tbl_9
+local tbl_78 = {
+    Type = "Yakuza";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat Yakuza";
+        Hints = {{
+            Name = "Defeat Yakuza.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 30;
+        };
+    }, {
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "I can start boss rush here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1469
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    local OwnedArtifacts_16 = arg1.Data.OwnedArtifacts
+    OwnedArtifacts_16.Value ..= ",Tatsuya"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Tatsuya Street MMA Unlocked!")
+    local OwnedTitles_3 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_3.Value ..= ",True Mad Dragon"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_78.Reward = Reward
+module["Tatsuya Street MMA"] = tbl_78
+local tbl_52 = {
+    Type = "Yakuza";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat Thugs";
+        Hints = {};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 1;
+        };
+    }, {
+        Name = "Defeat Yakuza";
+        Hints = {{
+            Name = "Defeat Yakuza.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 30;
+        };
+    }, {
+        Name = "Defeat Majima";
+        Hints = {};
+        Condition = {
+            Type = "Kill";
+            Target = "Goro Majima, Mad Dog of Shimano";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1528
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    local OwnedArtifacts_28 = arg1.Data.OwnedArtifacts
+    OwnedArtifacts_28.Value ..= ",Nishikiyama"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Essence of Koi Unlocked!")
+    local OwnedTitles_52 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_52.Value ..= ",The Koi"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_52.Reward = Reward
+module["Essence of Koi"] = tbl_52
+local tbl_128 = {
+    Type = "Yakuza";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Crane Style";
+        Hints = {{
+            Name = "Defeat Thugs.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 15;
+        };
+    }, {
+        Name = "Tiger Style";
+        Hints = {{
+            Name = "Defeat Yakuza.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 25;
+        };
+    }, {
+        Name = "Snake Style";
+        Hints = {{
+            Name = "Perform Perfect Blocks.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Perfect Block";
+            Amount = 10;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1598
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    local OwnedArtifacts_18 = arg1.Data.OwnedArtifacts
+    OwnedArtifacts_18.Value ..= ",Yagami"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Yagami Unlocked!")
+    local OwnedTitles_35 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_35.Value ..= ",Private Detective"
+    arg1.Data.Special.Boxer.Value = 99
+    for _, v in pairs(arg1.Data.Special:GetChildren()) do
+        if string.find(v.Name, "Yagami") then
+            if v:IsA("BoolValue") then
+                v.Value = true
+            else
+                v.Value = 99
+            end
+        end
+    end
+    var9_upvw.GiveYens(arg1, 1000000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_128.Reward = Reward
+module["Detective Skills"] = tbl_128
+local tbl_31 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Complete Underground Arena Raid";
+        Hints = {{
+            Name = "Conquer the Underground Arena";
+            Position = workspace.Game.Trainers.Sheeve.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Underground Arena";
+            Amount = 1;
+        };
+    }, {
+        Name = "Kill Dorian";
+        Hints = {{
+            Name = "I can find Dorian over here.";
+            Position = workspace.Game.Trainers.Sheeve.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Dorian";
+            Kills = 3;
+        };
+    }, {
+        Name = "Kill Sikorsky Boss";
+        Hints = {{
+            Name = "I can find Sikorsky over here.";
+            Position = workspace.Game.Trainers.Sheeve.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Sikorsky";
+            Kills = 3;
+        };
+    }, {
+        Name = "Kill Yanagi Boss";
+        Hints = {{
+            Name = "I can find Yanagi over here.";
+            Position = workspace.Game.Trainers.Sheeve.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yanagi";
+            Kills = 3;
+        };
+    }, {
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "I can start Boss Rush over here.";
+            Position = workspace.Game.Trainers:FindFirstChild("Apple").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1697
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Scorpion"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Scorpion Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",Shirai Ryu"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_31.Reward = Reward
+module.Scorpion = tbl_31
+local tbl_222 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Complete Boss Rush 3 times";
+        Hints = {{
+            Name = "I can start Boss Rush over here.";
+            Position = workspace.Game.Trainers:FindFirstChild("Apple").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 3;
+        };
+    }, {
+        Name = "Win Underground Arena Tournament";
+        Hints = {{
+            Name = "Start it from Tokugawa.";
+            Position = workspace.Game.Trainers.Tokugawa.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Underground Arena";
+            Amount = 3;
+        };
+    }, {
+        Name = "Kill Yujiro";
+        Hints = {{
+            Name = "I can find yujiro over here.";
+            Position = Vector3.new(-239.33, 2102.80, -13.666);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yujiro Hanma (20% Power)";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1760
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Pantheon"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Pantheon Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",The Unbreakable Spear"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_222.Reward = Reward
+module.Pantheon = tbl_222
+local tbl_178 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Kill Shadow Musashi";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Musashi";
+            Amount = 1;
+        };
+    }, {
+        Name = "Kill Dorian Boss";
+        Hints = {{
+            Name = "I can find Dorian over here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Dorian";
+            Kills = 3;
+        };
+    }, {
+        Name = "Defeat Pickle";
+        Hints = {{
+            Name = "I can find Pickle over here.";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1821
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",SubZero"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "SubZero Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",Cryomancer"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_178.Reward = Reward
+module.SubZero = tbl_178
+local tbl_143 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Complete Boss Rush 3 times";
+        Hints = {{
+            Name = "I can start Boss Rush over here.";
+            Position = workspace.Game.Trainers:FindFirstChild("Apple").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 3;
+        };
+    }, {
+        Name = "Kill Shadow Musashi 5 times";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Musashi";
+            Amount = 5;
+        };
+    }, {
+        Name = "Kill Musashi Boss";
+        Hints = {{
+            Name = "I can find Musashi over here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Musashi";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1881
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Yasuo"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Yasuo Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",The Unforgiven,Edgelord"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_143.Reward = Reward
+module.Yasuo = tbl_143
+local tbl_221 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Open 50 Cases";
+        Hints = {{
+            Name = "I can unlock some cases over here.";
+            Position = workspace.Game.Trainers.Johnny.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Cases";
+            Amount = 50;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1911
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Johnny"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Luck Unlocked!")
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_221.Reward = Reward
+module.Luck = tbl_221
+local tbl_59 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Kill 10 Shadow Musashi Bosses";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Musashi";
+            Amount = 10;
+        };
+    }, {
+        Name = "Kill Sukune 3 Times";
+        Hints = {{
+            Name = "I can find sukune over here";
+            Position = Vector3.new(49.7350, 2128.95, 496.169);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Sukune";
+            Kills = 3;
+        };
+    }, {
+        Name = "Complete 1 Boss Rush";
+        Hints = {{
+            Name = "I can start boss rush over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 1971
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Malenia"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Malenia Unlocked!")
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_59.Reward = Reward
+module.Malenia = tbl_59
+local tbl_42 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Kill 25 Thugs";
+        Hints = {{
+            Name = "I can find some thugs over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 25;
+        };
+    }, {
+        Name = "Kill Kato Boss";
+        Hints = {{
+            Name = "I can find Kato over here.";
+            Position = Vector3.new(101.559, 2104.75, -419.60);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Kiyosumi Kato";
+            Kills = 1;
+        };
+    }, {
+        Name = "Kill Pickle Boss";
+        Hints = {{
+            Name = "I can find Pickle over here.";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2030
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Ryu"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Ryu Unlocked!")
+    local OwnedTitles_24 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_24.Value ..= ",Street Fighter"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_42.Reward = Reward
+module.Ryu = tbl_42
+local tbl_47 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Kill Yujiro";
+        Hints = {{
+            Name = "I can find yujiro over here.";
+            Position = Vector3.new(-239.33, 2102.80, -13.666);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yujiro Hanma (20% Power)";
+            Kills = 1;
+        };
+    }, {
+        Name = "Kill Pickle";
+        Hints = {{
+            Name = "I can find pickle over here.";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 1;
+        };
+    }, {
+        Name = "Kill Musashi";
+        Hints = {{
+            Name = "I can find musashi over here.";
+            Position = Vector3.new(-347.12, 2132.19, 976.875);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Musashi";
+            Kills = 1;
+        };
+    }, {
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "I can start boss rush over here.";
+            Position = workspace.Game.Trainers:FindFirstChild("Apple").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2105
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Kratos"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Kratos Unlocked!")
+    local OwnedTitles_77 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_77.Value ..= ",Ghost of Sparta"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_47.Reward = Reward
+module.Kratos = tbl_47
+local tbl_33 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Kill 2 Yanagi Bosses";
+        Hints = {{
+            Name = "I can find Yanagi over here.";
+            Position = workspace.Game.Trainers.Sheeve.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yanagi";
+            Kills = 2;
+        };
+    }, {
+        Name = "Kill 2 Sikorsky Bosses";
+        Hints = {{
+            Name = "I can find Sikorsky over here.";
+            Position = workspace.Game.Trainers.Sheeve.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Sikorsky";
+            Kills = 2;
+        };
+    }, {
+        Name = "Kill 3 Yasha Apes";
+        Hints = {{
+            Name = "I can fight the Yasha Ape over here.";
+            Position = Vector3.new(200.759, 2118.93, 1743.19);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yasha Ape";
+            Kills = 3;
+        };
+    }, {
+        Name = "Complete a Boss Rush";
+        Hints = {{
+            Name = "I can start Boss Rush over here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2179
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Terumi"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Yuki Terumi Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",Crazy Blitz Guy,Chaotic Evil,The Serpent"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_33.Reward = Reward
+module["Yuki Terumi"] = tbl_33
+local tbl_212 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Kill Thugs";
+        Hints = {{
+            Name = "I can find some thugs over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 50;
+        };
+    }, {
+        Name = "Perfect Parry";
+        Hints = {{
+            Name = "Perform Perfect Blocks.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Perfect Block";
+            Amount = 10;
+        };
+    }, {
+        Name = "Do Sparring Sessions";
+        Hints = {{
+            Name = "I can do some sparring over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Sparring";
+            Amount = 5;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2239
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Travis Touchdown"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Travis Touchdown Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",No more Heroes!,Overworld Champion,Crownless King,Otaku Assassin"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_212.Reward = Reward
+module["Travis Touchdown"] = tbl_212
+local tbl_227 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Kill Kiryu";
+        Hints = {{
+            Name = "I can find kiryu in boss rush.";
+            Position = workspace.Game.Trainers:FindFirstChild("Apple").HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "KiryuKazuma";
+            Kills = 2;
+        };
+    }, {
+        Name = "Kill Thugs";
+        Hints = {{
+            Name = "I can find some thugs over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 20;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2284
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Dragonborn"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Dragonborn Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",Dragonborn,Hero of Skyrim,Ysmir,Dovahkiin"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_227.Reward = Reward
+module.Dragonborn = tbl_227
+local tbl_80 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat Shadow Musashi";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Musashi";
+            Amount = 10;
+        };
+    }, {
+        Name = "Defeat Musashi";
+        Hints = {{
+            Name = "I can find musashi over here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Musashi";
+            Kills = 5;
+        };
+    }, {
+        Name = "Kill Thugs";
+        Hints = {{
+            Name = "I can find some thugs over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 50;
+        };
+    }, {
+        Name = "Kill SWAT";
+        Hints = {{
+            Name = "I can find some SWAT police over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode4.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "SWAT";
+            Kills = 10;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2359
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Sephiroth"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Sephiroth Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",The Man in the Black Cape"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_80.Reward = Reward
+module.Sephiroth = tbl_80
+local tbl_116 = {
+    Type = "Games";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat Slayer";
+        Hints = {{
+            Name = "I can fight slayer in boss rush over here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Slayer";
+            Kills = 3;
+        };
+    }, {
+        Name = "Defeat Shadow Yujiro";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Yujiro";
+            Kills = 1;
+        };
+    }, {
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "I can start boss rush over here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 3;
+        };
+    }, {
+        Name = "Kill Thugs";
+        Hints = {{
+            Name = "I can find some thugs over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 15;
+        };
+    }, {
+        Name = "Defeat Yujiro";
+        Hints = {{
+            Name = "I can find yujiro over here.";
+            Position = Vector3.new(-239.33, 2102.80, -13.666);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yujiro Hanma (20% Power)";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2448
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Slayer"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Slayer Unlocked!")
+    arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",Laid-Back and Dignified Vampire"
+    var9_upvw.GiveYens(arg1, 300000)
+    var9_upvw.GiveExperience(arg1, math.random(120000, 170000))
+end
+tbl_116.Reward = Reward
+module.Slayer = tbl_116
+local tbl_35 = {
+    Type = "Standalone";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Equip Brass Knuckles";
+        Hints = {};
+        Condition = {
+            Type = "Complete";
+            Target = "Brass Knuckles";
+            Amount = 1;
+        };
+    }, {
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "I can start boss rush here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 5;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2496
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Adam"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Adam Unlocked!")
+    local OwnedTitles_84 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_84.Value ..= ",Father of Humanity"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_35.Reward = Reward
+module.Adam = tbl_35
+local tbl_83 = {
+    Type = "Standalone";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat 20 Thugs";
+        Hints = {{
+            Name = "Defeat Thugs";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 20;
+        };
+    }, {
+        Name = "Buy Alexanderson's Blades";
+        Hints = {{
+            Name = "Buy Alexanderson's Blades for 4 million Yen in the Black Market.";
+            Position = workspace.Game.Trainers["Have-it-all Merchant"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Alexanderson's Blades";
+            Amount = 1;
+        };
+    }, {
+        Name = "Win Boss Rush";
+        Hints = {{
+            Name = "Participate in and win a Boss Rush challenge.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 4;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2565
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Alexander Anderson"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Anderson Unlocked!")
+    local OwnedTitles_48 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_48.Value ..= ",Holy Executioner"
+    var9_upvw.GiveYens(arg1, 130000)
+    var9_upvw.GiveExperience(arg1, math.random(80000, 100000))
+end
+tbl_83.Reward = Reward
+module["Alexander Anderson"] = tbl_83
+local tbl_226 = {
+    Type = "Standalone";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Defeat 30 Thugs";
+        Hints = {{
+            Name = "Defeat Thugs.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 30;
+        };
+    }, {
+        Name = "Drink 25 Protein Shakes";
+        Hints = {{
+            Name = "Drink 25 Protein Shakes.";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Protein Shake";
+            Amount = 25;
+        };
+    }, {
+        Name = "Activate Heart Pump Skill";
+        Hints = {{
+            Name = "Use the main ability of the Heart Pump implant.";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Heart Pump";
+            Amount = 1;
+        };
+    }, {
+        Name = "Use Jack Suplex Skill";
+        Hints = {{
+            Name = "Use the Jack Suplex skill in combat.";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Suplex";
+            Amount = 1;
+        };
+    }, {
+        Name = "Use Compound V";
+        Hints = {{
+            Name = "Use Compound V.";
+            Position = workspace.Game.Trainers["Mysterious Man"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Compound V";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2666
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Bane"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Bane Style Unlocked!")
+    local OwnedTitles_59 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_59.Value ..= ",Venom Titan"
+    var9_upvw.GiveYens(arg1, 150000)
+    var9_upvw.GiveExperience(arg1, math.random(80000, 100000))
+end
+tbl_226.Reward = Reward
+module.Bane = tbl_226
+local tbl_189 = {
+    Type = "Standalone";
+    ShowInQuestMenu = true;
+    Tasks = {{
+        Name = "Activate Rage 25 times";
+        Hints = {{
+            Name = "Activate Rage mode.";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Rage";
+            Amount = 25;
+        };
+    }, {
+        Name = "Equip Goro Goro No Mi";
+        Hints = {{
+            Name = "Equip Goro Goro No Mi.";
+            Position = workspace.Game.Trainers["???"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Goro Goro No Mi";
+            Amount = 1;
+        };
+    }, {
+        Name = "Use Pulse";
+        Hints = {{
+            Name = "Complete";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Pulse";
+            Amount = 1;
+        };
+    }, {
+        Name = "Use Smite";
+        Hints = {{
+            Name = "Use Smite";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Smite";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2754
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Dalauan Sparrow"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Dalauan Sparrow Unlocked!")
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(75000, 79000))
+end
+tbl_189.Reward = Reward
+module["Dalauan Sparrow"] = tbl_189
+local tbl_73 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "Complete Boss Rush.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }, {
+        Name = "Defeat Imaginary Legend: Yujiro Hanma";
+        Hints = {{
+            Name = "Defeat Imaginary Legend: Yujiro Hanma";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Yujiro";
+            Amount = 1;
+        };
+    }, {
+        Name = "Defeat Imaginary Legend: Musashi Miyamoto";
+        Hints = {{
+            Name = "Defeat Imaginary Legend: Miyamoto Musashi";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Musashi";
+            Amount = 1;
+        };
+    }, {
+        Name = "Buy Doom’s Mask for 7 Million Yen";
+        Hints = {{
+            Name = "Purchase Doom’s Mask";
+            Position = workspace.Game.Trainers["Have-it-all Merchant"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Doom’s Mask";
+            Amount = 1;
+        };
+    }, {
+        Name = "Complete Sparring (3) Times";
+        Hints = {{
+            Name = "Complete Rank 4 Sparring.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Sparring Level 4";
+            Amount = 3;
+        };
+    }, {
+        Name = "Defeat Pickle Boss";
+        Hints = {{
+            Name = "Defeat Pickle";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2872
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Dr Doom"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Dr Doom Unlocked!")
+    local OwnedTitles_86 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_86.Value ..= ",Evil Genius"
+    var9_upvw.GiveYens(arg1, 200000)
+    var9_upvw.GiveExperience(arg1, math.random(88000, 110000))
+end
+tbl_73.Reward = Reward
+module.Doom = tbl_73
+local tbl_144 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "Use Emergency Heal 50 Times";
+        Hints = {{
+            Name = "Use Emergency Heal.";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Emergency Heal";
+            Amount = 50;
+        };
+    }, {
+        Name = "Use the Taxi";
+        Hints = {{
+            Name = "Maybe I can fast travel somewhere...";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Talk";
+            Target = "Taxi";
+            Amount = 1;
+        };
+    }, {
+        Name = "Equip Kureha";
+        Hints = {{
+            Name = "Equip Kureha";
+            Position = workspace.Game.Trainers["???"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Kureha";
+            Amount = 1;
+        };
+    }, {
+        Name = "Buy Dr. House's Cane for 5 Million Yen";
+        Hints = {{
+            Name = "Black Market probably sells it.";
+            Position = workspace.Game.Trainers["Have-it-all Merchant"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Dr. House's Cane";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 2959
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",House"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Dr. House Unlocked!")
+    local OwnedTitles_22 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_22.Value ..= ",Medical Cynic"
+    var9_upvw.GiveYens(arg1, 90000)
+    var9_upvw.GiveExperience(arg1, math.random(50000, 70000))
+end
+tbl_144.Reward = Reward
+module["Dr. House"] = tbl_144
+local tbl_12 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "Equip Peek-A-Boo";
+        Hints = {{
+            Name = "Equip Peek-A-Boo.";
+            Position = workspace.Game.Trainers["Lee, The Master"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Iron Mike";
+            Amount = 1;
+        };
+    }, {
+        Name = "Dash 25 Times";
+        Hints = {{
+            Name = "Dash!";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Dash";
+            Amount = 25;
+        };
+    }, {
+        Name = "Complete Sparring 3 Times";
+        Hints = {{
+            Name = "Complete Rank 3 Sparring.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Sparring Level 3";
+            Amount = 3;
+        };
+    }, {
+        Name = "Perfect Block 10 Times";
+        Hints = {{
+            Name = "Time your blocks perfectly!";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Perfect Block";
+            Amount = 10;
+        };
+    }, {
+        Name = "Complete Sparring (3) Times";
+        Hints = {{
+            Name = "Complete Rank 4 Sparring.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Sparring Level 4";
+            Amount = 3;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3060
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Ippo"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Ippo Unlocked!")
+    local OwnedTitles_42 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_42.Value ..= ",Dempsey Roller"
+    var9_upvw.GiveYens(arg1, 150000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 130000))
+end
+tbl_12.Reward = Reward
+module.Ippo = tbl_12
+local tbl_172 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "Equip Hanayama Brute-Force";
+        Hints = {{
+            Name = "Obtain strong grip strength.";
+            Position = workspace.Game.Trainers.Hanayama:GetPivot().Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Hanayama";
+            Amount = 1;
+        };
+    }, {
+        Name = "Defeat Thugs";
+        Hints = {{
+            Name = "Beat up street thugs for clout. (40)";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 40;
+        };
+    }, {
+        Name = "Defeat Yakuza";
+        Hints = {{
+            Name = "Beat up rival yakuzas. (50)";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 50;
+        };
+    }, {
+        Name = "Kill SWAT";
+        Hints = {{
+            Name = "Defeat heroes. (40)";
+            Position = workspace.Game.WalkNodes.SpawnNode4.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "SWAT";
+            Kills = 40;
+        };
+    }, {
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "Start Boss Rush by talking to Apple.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3160
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Overhaul") then
+        arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Overhaul"
+    end
+    if not string.find(arg1.Data.Title.OwnedTitles.Value, ",Human Architect") then
+        arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",Human Architect"
+    end
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Overhaul + Title Unlocked!")
+    var9_upvw.GiveYens(arg1, 150000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 130000))
+end
+tbl_172.Reward = Reward
+module.Overhaul = tbl_172
+local tbl_210 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "Equip the loss of senses implant";
+        Hints = {{
+            Name = "Learn to see without your eyes.";
+            Position = workspace.Game.Trainers["Mysterious Doctor2"]:GetPivot().Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Loss of Senses";
+            Amount = 1;
+        };
+    }, {
+        Name = "Defeat Yakuza";
+        Hints = {{
+            Name = "Fight Crime (50).";
+            Position = workspace.Game.WalkNodes.SpawnNode1.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yakuza";
+            Kills = 50;
+        };
+    }, {
+        Name = "Defeat Pickle";
+        Hints = {{
+            Name = "Stop this prehistoric criminal (20).";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 20;
+        };
+    }, {
+        Name = "Defeat Shadow Yujiro";
+        Hints = {{
+            Name = "Even his shadow is evil! (20)";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Yujiro";
+            Amount = 20;
+        };
+    }, {
+        Name = "Defeat Yujiro";
+        Hints = {{
+            Name = "Stop this supervillain! (20)";
+            Position = Vector3.new(-239.33, 2102.80, -13.666);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yujiro Hanma (20% Power)";
+            Kills = 20;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3260
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Lemillion") then
+        arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Lemillion"
+    end
+    if not string.find(arg1.Data.Title.OwnedTitles.Value, ",Comedy Hero") then
+        arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",Comedy Hero"
+    end
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Lemillion + Title Unlocked!")
+    var9_upvw.GiveYens(arg1, 150000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 130000))
+end
+tbl_210.Reward = Reward
+module.Lemillion = tbl_210
+local tbl_175 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "I lack cursed energy.";
+        Hints = {{
+            Name = "Consume 5 Cursed fingers obtained from Boss Rush";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Cursed Fingers";
+            Amount = 5;
+        };
+    }, {
+        Name = "I need to defeat sukuna.";
+        Hints = {{
+            Name = "Defeat 600 Sukunas";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Sukuna";
+            Amount = 600;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3316
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    if not string.find(arg1.Data.OwnedArtifacts.Value, ",Execution Yuji") then
+        arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Execution Yuji"
+    end
+    if not string.find(arg1.Data.Title.OwnedTitles.Value, ",A King’s Vessel") then
+        arg1.Data.Title.OwnedTitles.Value = arg1.Data.Title.OwnedTitles.Value..",A King’s Vessel"
+    end
+    if not string.find(arg1.Data.OwnedEmotes.Value, ",yuji") then
+        arg1.Data.OwnedEmotes.Value = arg1.Data.OwnedEmotes.Value..",yuji"
+    end
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Execution Yuji + Title + Emote Unlocked!")
+    var9_upvw.GiveYens(arg1, 150000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 130000))
+end
+tbl_175.Reward = Reward
+module["Execution Yuji"] = tbl_175
+local tbl_115 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "Buy Jagi's Shotgun";
+        Hints = {{
+            Name = "Buy Jagi's Shotgun from the Black Market.";
+            Position = workspace.Game.Trainers["Have-it-all Merchant"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Jagi Shotgun";
+            Amount = 1;
+        };
+    }, {
+        Name = "Complete Sparring (3) Times";
+        Hints = {{
+            Name = "Complete Rank 4 Sparring.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Sparring Level 4";
+            Amount = 3;
+        };
+    }, {
+        Name = "Equip Military Style";
+        Hints = {{
+            Name = "Equip the Military Style.";
+            Position = workspace.Game.Trainers["Lee, The Master"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Kywl";
+            Amount = 1;
+        };
+    }, {
+        Name = "Defeat Kato";
+        Hints = {{
+            Name = "Kato can be found nearby.";
+            Position = Vector3.new(101.559, 2104.75, -419.60);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Kiyosumi Kato";
+            Kills = 1;
+        };
+    }, {
+        Name = "Win Underground Arena Raid";
+        Hints = {{
+            Name = "Start the raid from Tokugawa.";
+            Position = workspace.Game.Trainers.Tokugawa.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Underground Arena";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3424
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Jagi"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Jagi Style Unlocked!")
+    local OwnedTitles_71 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_71.Value ..= ",Fake Hokuto"
+    var9_upvw.GiveYens(arg1, 120000)
+    var9_upvw.GiveExperience(arg1, math.random(70000, 90000))
+end
+tbl_115.Reward = Reward
+module.Jagi = tbl_115
+local tbl_4 = {
+    Type = "Standalone";
+    Tasks = {{
+        Name = "Defeat Doyle";
+        Hints = {{
+            Name = "Defeat Doyle.";
+            Position = workspace.Game.Trainers.Sheeve.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Doyle";
+            Kills = 1;
+        };
+    }, {
+        Name = "Equip Orochi-Ryuu Karate";
+        Hints = {{
+            Name = "Equip the Orochi-Ryuu Karate style.";
+            Position = workspace.Game.Trainers["???"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Doppo Orochi‎";
+            Amount = 1;
+        };
+    }, {
+        Name = "Complete Underground Arena Raid";
+        Hints = {{
+            Name = "Talk to Tokugawa to begin the raid.";
+            Position = workspace.Game.Trainers.Tokugawa.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Underground Arena";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3490
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Kenshiro"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Hokuto Shinken Unlocked!")
+    local OwnedTitles_47 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_47.Value ..= ",You Are Already Dead"
+    var9_upvw.GiveYens(arg1, 150000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 110000))
+end
+tbl_4.Reward = Reward
+module.Kenshiro = tbl_4
+local tbl_141 = {
+    Type = "Bleach";
+    Tasks = {{
+        Name = "Complete ";
+        Hints = {{
+            Name = "I can do some sparring over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Sparring";
+            Amount = 5;
+        };
+    }, {
+        Name = "Defeat 30 Thugs";
+        Hints = {{
+            Name = "Defeat Thugs.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 30;
+        };
+    }, {
+        Name = "Buy Hogyoku";
+        Hints = {{
+            Name = "Buy the Hogyoku from the Black Market.";
+            Position = workspace.Game.Trainers["Have-it-all Merchant"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Hogyoku";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3555
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Aizen"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Aizen Style Unlocked!")
+    local OwnedTitles_61 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_61.Value ..= ",Traitor"
+    var9_upvw.GiveYens(arg1, 150000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 110000))
+end
+tbl_141.Reward = Reward
+module.Aizen = tbl_141
+local tbl_201 = {
+    Type = "Bleach";
+    Tasks = {{
+        Name = "Defeat Shadow Yujiro";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Yujiro";
+            Amount = 1;
+        };
+    }, {
+        Name = "Kill Shadow Musashi";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Musashi";
+            Amount = 1;
+        };
+    }, {
+        Name = "Kill Yujiro";
+        Hints = {{
+            Name = "I can find yujiro over here.";
+            Position = Vector3.new(-239.33, 2102.80, -13.666);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yujiro Hanma (20% Power)";
+            Kills = 1;
+        };
+    }, {
+        Name = "Kill Musashi Boss";
+        Hints = {{
+            Name = "I can find Musashi over here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Musashi";
+            Kills = 1;
+        };
+    }, {
+        Name = "Complete Underground Arena Raid";
+        Hints = {{
+            Name = "Conquer the Underground Arena";
+            Position = workspace.Game.Trainers.Tokugawa.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Underground Arena";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3648
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Starrk"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Starrk Style Unlocked!")
+    local OwnedTitles_9 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_9.Value ..= ",wolf boy"
+    local OwnedTitles_74 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_74.Value ..= ",Espada I"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(80000, 100000))
+end
+tbl_201.Reward = Reward
+module.Starrk = tbl_201
+local tbl_23 = {
+    Type = "Bleach";
+    Tasks = {{
+        Name = "Kill SWAT";
+        Hints = {{
+            Name = "I can find some SWAT police over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode4.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "SWAT";
+            Kills = 25;
+        };
+    }, {
+        Name = "Defeat Pickle";
+        Hints = {{
+            Name = "I can find Pickle over here.";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 1;
+        };
+    }, {
+        Name = "Complete Boss Rush";
+        Hints = {{
+            Name = "I can start boss rush here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Boss Rush";
+            Amount = 3;
+        };
+    }, {
+        Name = "Kill Shadow Musashi";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Shadow Boxing Musashi";
+            Kills = 1;
+        };
+    }, {
+        Name = "Win Underground Arena Raid";
+        Hints = {{
+            Name = "Start the raid from Tokugawa.";
+            Position = workspace.Game.Trainers.Tokugawa.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Underground Arena";
+            Amount = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3745
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Coyote Starrk"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Coyote Stark Unlocked!")
+    local OwnedTitles_76 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_76.Value ..= ",Cero Spammer"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(70000, 90000))
+end
+tbl_23.Reward = Reward
+module["Coyote Starrk"] = tbl_23
+local tbl_113 = {
+    Type = "Bleach";
+    Tasks = {{
+        Name = "Equip Smite";
+        Hints = {{
+            Name = "Use Smite";
+            Position = workspace.Game.AreaFolder.City.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Smite";
+            Amount = 1;
+        };
+    }, {
+        Name = "Defeat 50 Thugs";
+        Hints = {{
+            Name = "Defeat Thugs.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 50;
+        };
+    }, {
+        Name = "Buy Cat Ears";
+        Hints = {{
+            Name = "Buy Cat Ears for 5 million Yen in the Black Market.";
+            Position = workspace.Game.Trainers["Have-it-all Merchant"].HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Cat Ears";
+            Amount = 1;
+        };
+    }, {
+        Name = "Kill Shadow Musashi";
+        Hints = {{
+            Name = "I can do some shadow boxing over here.";
+            Position = workspace.Game.Trainers.Coach.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Complete";
+            Target = "Shadow Boxing Musashi";
+            Amount = 1;
+        };
+    }, {
+        Name = "Kill Yujiro";
+        Hints = {{
+            Name = "I can find yujiro over here.";
+            Position = Vector3.new(-239.33, 2102.80, -13.666);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Yujiro Hanma (20% Power)";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3845
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Yoruichi"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Yoruichi Style Unlocked!")
+    local OwnedTitles_92 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_92.Value ..= ",God Of Thunder"
+    var9_upvw.GiveYens(arg1, 120000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 100000))
+end
+tbl_113.Reward = Reward
+module.Yoruichi = tbl_113
+local tbl_131 = {
+    Type = "Bleach";
+    Tasks = {{
+        Name = "Kill SWAT";
+        Hints = {{
+            Name = "I can find some SWAT police over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode4.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "SWAT";
+            Kills = 20;
+        };
+    }, {
+        Name = "Kill Thugs";
+        Hints = {{
+            Name = "I can find some thugs over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 30;
+        };
+    }, {
+        Name = "Defeat Pickle";
+        Hints = {{
+            Name = "I can find Pickle over here.";
+            Position = Vector3.new(-220.94, 1985.11, -0.9049);
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Pickle";
+            Kills = 1;
+        };
+    }, {
+        Name = "Kill Jetstream Sam";
+        Hints = {{
+            Name = "I can find Jetstream Sam here.";
+            Position = workspace.Game.Trainers.Apple.HumanoidRootPart.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Jetstream Sam";
+            Kills = 1;
+        };
+    }};
+}
+local function Reward(arg1) -- Line 3926
+    --[[ Upvalues[1]:
+        [1]: var9_upvw (read and write)
+    ]]
+    arg1.Data.OwnedArtifacts.Value = arg1.Data.OwnedArtifacts.Value..",Kenpachi"
+    game.ReplicatedStorage.Remotes.ServerToClient.Effect:FireClient(arg1, "Alert", "Kenpachi Style Unlocked!")
+    local OwnedTitles_73 = arg1.Data.Title.OwnedTitles
+    OwnedTitles_73.Value ..= ",Worlds Strongest Man"
+    var9_upvw.GiveYens(arg1, 100000)
+    var9_upvw.GiveExperience(arg1, math.random(90000, 100000))
+end
+tbl_131.Reward = Reward
+module.Kenpachi = tbl_131
+local tbl_198 = {
+    Type = "Bleach";
+    Tasks = {{
+        Name = "Kill Thugs";
+        Hints = {{
+            Name = "I can find some thugs over here.";
+            Position = workspace.Game.WalkNodes.SpawnNode3.Position;
+        }};
+        Condition = {
+            Type = "Kill";
+            Target = "Thug";
+            Kills = 30;
+        };
+    }, {
+        Name = "Defeat Shadow Yujiro";
+        Hints = {{
+      [trimmed]  -  Edit
